@@ -7,6 +7,7 @@ const appRoutes: Routes = [
     { path: '', redirectTo: 'chart1', pathMatch: 'full' },
     { path: 'chart1', loadChildren: './chart1/chart1.module#Chart1Module' },
     { path: 'chart2', loadChildren: './chart2/chart2.module#Chart2Module' },
+    { path: 'chart3', loadChildren: './chart3/chart3.module#Chart3Module' },
     { path: '**', component: PageNotFoundComponent, data: { title: 'Not found', previousPage: 'reports', hideRightMenu: true } }
 ];
 
