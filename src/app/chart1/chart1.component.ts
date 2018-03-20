@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import APP_CONFIG from './../app.config';
-import { Node, Link } from './../d3';
 
 @Component({
   selector: 'app-chart1',
@@ -9,28 +7,12 @@ import { Node, Link } from './../d3';
 })
 export class Chart1Component {
 
-  nodes: Node[] = [];
-  links: Link[] = [];
-
-  constructor() {
-    const N = APP_CONFIG.N,
-          getIndex = number => number - 1;
-
-    /** constructing the nodes array */
-    for (let i = 1; i <= N; i++) {
-      this.nodes.push(new Node(i));
-    }
-
-    for (let i = 1; i <= N; i++) {
-      for (let m = 2; i * m <= N; m++) {
-        /** increasing connections toll on connecting nodes */
-        this.nodes[getIndex(i)].linkCount++;
-        this.nodes[getIndex(i * m)].linkCount++;
-
-        /** connecting the nodes before starting the simulation */
-        this.links.push(new Link(i, i * m));
-      }
-    }
-  }
+  public data: any[] = [
+         {date: '24-Apr-07', value: 93.24},
+         {date: '25-Apr-07', value: 95.35},
+         {date: '26-Apr-07', value: 98.84},
+         {date: '27-Apr-07', value: 99.92},
+         {date: '28-Apr-07', value: 99.80},
+     ];
 
 }
