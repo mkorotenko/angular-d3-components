@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { D3Service, D3_DIRECTIVES } from './../d3';
 
-import { GraphComponent } from './../visuals/graph/graph.component';
+import { HexagonalGraphComponent } from './../visuals/hexagonal/hexagonal-graph.component';
 import { SHARED_VISUALS } from './../visuals/shared';
 import { Chart1Component } from './chart1.component';
 
@@ -17,7 +17,7 @@ import { Chart1RoutingModule } from './chart1.routing.module';
         Chart1RoutingModule,
     ],
     declarations: [
-         GraphComponent,
+         HexagonalGraphComponent,
          ...SHARED_VISUALS,
          ...D3_DIRECTIVES,
         Chart1Component
