@@ -4,15 +4,15 @@ import * as d3 from 'd3';
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'line-graph',
+  selector: 'area-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
     <svg #svg [attr.width]="_options.width" [attr.height]="_options.height"></svg>
   `,
-  styleUrls: ['./line-graph.component.css']
+  styleUrls: ['./area-chart.component.css']
 })
-export class LineGraphComponent implements OnInit, AfterViewInit, OnChanges {
+export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
 
     public graph: any; // ForceDirectedGraph;
     public svg: any;
@@ -69,45 +69,44 @@ export class LineGraphComponent implements OnInit, AfterViewInit, OnChanges {
         const width = +gBox.width - this.margin.left - this.margin.right,
             height = +gBox.height - this.margin.top - this.margin.bottom;
 
-        const x = d3.scaleTime()
-            .rangeRound([0, width]);
-
-        const y = d3.scaleLinear()
-            .rangeRound([height, 0]);
+            var x = d3.scaleTime().range([0, width]);
+            var y = d3.scaleLinear().range([height, 0]);
 
         const data = this._data;
 
         x.domain(d3.extent(data, (d: any) => d.date));
-        y.domain(d3.extent(data, (d: any) => d.close));
+        y.domain([0, d3.max(data, (d: any) => d.close)]);
+
+        var area = d3.area()
+            .x((d: any) => x(d.date))
+            .y0(height)
+            .y1((d: any) => y(d.close));
+
         this._line = d3.line()
             .x((d: any): number => x(d.date))
             .y((d: any): number => y(d.close));
 
-        this.graph.append('g')
-              .attr('transform', 'translate(0,' + height + ')')
-              .call(d3.axisBottom(x));
-            // .select(".domain")
-            //   .remove();
+        let svg = this.graph;
+        // add the area
+        svg.append("path")
+            .data([data])
+            .attr("class", "area")
+            .attr("d", area);
 
-        this.graph.append('g')
-              .call(d3.axisLeft(y))
-              .append('text')
-              .attr('fill', '#000')
-            //   .attr("transform", "rotate(-90)")
-              .attr('y', 6)
-              .attr('dy', '0.71em')
-              .attr('text-anchor', 'end')
-              .text('Price ($)');
+        // add the valueline path.
+        svg.append("path")
+            .data([data])
+            .attr("class", "line")
+            .attr("d", <any>this._line);
 
-        this.line = this.graph.append('path')
-              .datum(data)
-              // .enter()
-              .attr('fill', 'none')
-              .attr('stroke', 'steelblue')
-              .attr('stroke-linejoin', 'round')
-              .attr('stroke-linecap', 'round')
-              .attr('stroke-width', 1.5)
-              .attr('d', <any>this._line);
+        // add the X Axis
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // add the Y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y));
 
     }
 
