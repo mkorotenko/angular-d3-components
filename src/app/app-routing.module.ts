@@ -9,6 +9,7 @@ const appRoutes: Routes = [
     { path: 'chart2', loadChildren: './chart2/chart2.module#Chart2Module' },
     { path: 'chart3', loadChildren: './chart3/chart3.module#Chart3Module' },
     { path: 'chart4', loadChildren: './chart4/chart4.module#Chart4Module' },
+    { path: 'chart5', loadChildren: './chart5/chart5.module#Chart5Module' },
     { path: '**', component: PageNotFoundComponent, data: { title: 'Not found', previousPage: 'reports', hideRightMenu: true } }
 ];
 
