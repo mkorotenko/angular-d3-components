@@ -123,8 +123,8 @@ export class LineGraphComponent implements OnInit, AfterViewInit, OnChanges {
 
     get options() {
         return this._options = {
-        width: window.innerWidth,
-        height: window.innerHeight
+            width: window.innerWidth,
+            height: window.innerHeight
         };
     }
 }
