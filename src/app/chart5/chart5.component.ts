@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-chart1',
-  templateUrl: './chart1.component.html',
-  styleUrls: ['./chart1.component.css']
+  selector: 'app-chart5',
+  templateUrl: './chart5.component.html',
+  styleUrls: ['./chart5.component.css']
 })
-export class Chart1Component {
+export class Chart5Component {
 
   public data: any[] = [
     {date: '24-Apr-07', value: 93.24},
