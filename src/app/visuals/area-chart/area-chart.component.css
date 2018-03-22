@@ -5,6 +5,17 @@
   }
   
   .area {
-    fill: lightsteelblue;
+    fill-opacity: 0.8;
+    fill: #d6eaff;
+  }
+  
+  .grid-line {
+    stroke: #000;
+    stroke-width: 0.5;
+    stroke-opacity: 0.3;
+  }
+
+  .domain {
+    display: none;
   }
   
