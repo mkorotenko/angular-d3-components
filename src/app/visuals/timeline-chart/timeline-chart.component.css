@@ -1,8 +1,9 @@
-svg {
-  height: 1100px;
-  width: 1100px;
+g.timeline rect {
+    fill: #202576;
+    stroke: black;
+    stroke-width: 1;
 }
-div.viz {
-  height: 1000px;
-  width: 1000px;
+g.timeline text {
+  fill: #fff;
+  text-anchor: middle;
 }
