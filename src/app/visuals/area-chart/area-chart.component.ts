@@ -9,8 +9,8 @@ import * as d3 from 'd3';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
-    <svg #svg [attr.width]="_options.width" [attr.height]="_options.height"></svg>
-    <div class="tooltip">
+    <svg #svg [attr.width]="width" [attr.height]="height"></svg>
+    <div #tooltip class="tooltip">
         <div class="info time">
             <span class="value">{{startTime}}-{{endTime}}</span>
         </div>
@@ -31,18 +31,27 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
     public sales: string;
     public hours: string;
 
+    public width: number = 600;
+    public height: number = 600;
+
     public graph: any; // ForceDirectedGraph;
     public svg: any;
+    public tooltip: any;
 
     public _options: { width, height } = { width: 600, height: 600 };
     public margin = {top: 20, right: 20, bottom: 30, left: 50};
 
     @ViewChild('svg') _svg: any;
+    @ViewChild('tooltip') _tooltip: any;
 
-    // @HostListener('window:resize', ['$event'])
-    // onResize(event) {
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
     //     // this.updateChart();
-    // }
+        this.width = 700;
+        this.cd.markForCheck();
+        this.updateChart();
+
+    }
 
     // tslint:disable-next-line:member-ordering
     @Input() data: any[];
@@ -77,6 +86,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
         // console.info('ngOnChanges', this._data);
         this.svg = d3.select(this._svg.nativeElement);
         this.graph = this.svg.append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+        this.tooltip = d3.select(this._tooltip.nativeElement);
 
         this.updateChart();
     }
@@ -84,7 +94,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
     public updateChart() {
         console.info('updateChart', this._data);
 
-        const gBox = { width: this.svg.attr('width'), height: this.svg.attr('height') }; // this.graph.node().getBBox();
+        const gBox = { width: this.width, height: this.height }; // this.graph.node().getBBox();
         const width = +gBox.width - this.margin.left - this.margin.right,
             height = +gBox.height - this.margin.top - this.margin.bottom;
 
@@ -98,8 +108,6 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
         x.domain(d3.extent(data, (d: any) => d.date));
         y.domain([yMin - yMax*0.05, yMax + yMax*0.05]);
         // y.domain(d3.extent(data, (d: any) => d.close));
-
-        const tooltip = d3.select('div.tooltip');
 
         var area = d3.area()
             .curve(d3.curveNatural)
@@ -116,8 +124,9 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
         let tf = d3.timeFormat('%I:%M %p');
         let svg = this.graph;
         // add the area
-        svg.append("path")
+        svg.selectAll("path")
             .data([data])
+            .enter().append("path")
             .attr("class", "area")
             .attr("d", area);
 
@@ -133,7 +142,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
                 this.sales = '$' + d.close;
                 this.hours = '1';
 
-                tooltip
+                this.tooltip
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY) - 85 + "px")
                     .transition().duration(200)
@@ -142,7 +151,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
                 this.cd.markForCheck();
             })
             .on("mouseout", (d) => {
-                tooltip.transition()
+                this.tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
             });
@@ -188,15 +197,4 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
     // tslint:disable-next-line:member-ordering
     private _line: any;
 
-    // public newDate() {
-    //     this.line
-    //         .attr('d', <any>this._line);
-    // }
-
-    // get options() {
-    //     return this._options = {
-    //         width: window.innerWidth,
-    //         height: window.innerHeight
-    //     };
-    // }
 }
