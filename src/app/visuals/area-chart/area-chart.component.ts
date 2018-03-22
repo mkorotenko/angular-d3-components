@@ -10,10 +10,26 @@ import * as d3 from 'd3';
   encapsulation: ViewEncapsulation.None,
   template: `
     <svg #svg [attr.width]="_options.width" [attr.height]="_options.height"></svg>
+    <div class="tooltip">
+        <div class="info time">
+            <span class="value">{{startTime}}-{{endTime}}</span>
+        </div>
+        <div class="info">
+            Projected sales: <span class="value">{{sales}}</span>
+        </div>
+        <div class="info">
+            Projected labor hours: <span class="value">{{hours}}</span>
+        </div>
+    </div>
   `,
   styleUrls: ['./area-chart.component.css']
 })
 export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
+
+    public startTime: string;
+    public endTime: string;
+    public sales: string;
+    public hours: string;
 
     public graph: any; // ForceDirectedGraph;
     public svg: any;
@@ -33,7 +49,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
     // tslint:disable-next-line:member-ordering
     private _data: {date, close}[] = [];
 
-    constructor(private ref: ChangeDetectorRef) {
+    constructor(private cd: ChangeDetectorRef) {
         // console.info('constructor', this.svg.nativeElement);
     }
 
@@ -66,7 +82,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     public updateChart() {
-        console.info('updateChart');
+        console.info('updateChart', this._data);
 
         const gBox = { width: this.svg.attr('width'), height: this.svg.attr('height') }; // this.graph.node().getBBox();
         const width = +gBox.width - this.margin.left - this.margin.right,
@@ -83,6 +99,8 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
         y.domain([yMin - yMax*0.05, yMax + yMax*0.05]);
         // y.domain(d3.extent(data, (d: any) => d.close));
 
+        const tooltip = d3.select('div.tooltip');
+
         var area = d3.area()
             .curve(d3.curveNatural)
             .x((d: any) => x(d.date))
@@ -95,6 +113,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
         //     .x((d: any): number => x(d.date))
         //     .y((d: any): number => y(d.close));
 
+        let tf = d3.timeFormat('%I:%M %p');
         let svg = this.graph;
         // add the area
         svg.append("path")
@@ -107,7 +126,26 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
             .enter().append("circle")
             .attr("r", 4)
             .attr("cx", (d) => x(d.date))
-            .attr("cy", (d) => y(d.close));
+            .attr("cy", (d) => y(d.close))
+            .on("mouseover", (d) => {
+                this.startTime = tf(d.date);
+                this.endTime = tf(d.date);
+                this.sales = '$' + d.close;
+                this.hours = '1';
+
+                tooltip
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY) - 85 + "px")
+                    .transition().duration(200)
+                    .style("opacity", 1);
+
+                this.cd.markForCheck();
+            })
+            .on("mouseout", (d) => {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
         
         // add the valueline path.
         // svg.append("path")
@@ -150,15 +188,15 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
     // tslint:disable-next-line:member-ordering
     private _line: any;
 
-    public newDate() {
-        this.line
-            .attr('d', <any>this._line);
-    }
+    // public newDate() {
+    //     this.line
+    //         .attr('d', <any>this._line);
+    // }
 
-    get options() {
-        return this._options = {
-            width: window.innerWidth,
-            height: window.innerHeight
-        };
-    }
+    // get options() {
+    //     return this._options = {
+    //         width: window.innerWidth,
+    //         height: window.innerHeight
+    //     };
+    // }
 }
