@@ -24,61 +24,61 @@ export class Chart1Component {
 
   constructor() {
     // d3.timeParse('%d/%m/%y %H:%M')
-    console.info('d3', d3);
-    console.info('this', this);
+    // console.info('d3', d3);
+    // console.info('this', this);
   }
 
   public schedule: ScheduleNode[] = [
     {
-      station: 'STATION NAME 1', 
+      station: 'STATION NAME 1',
       group: 'group1',
       start: DateTime('22/03/2018 09:30'),
       end: DateTime('22/03/2018 13:00'),
     },
     {
-      station: 'STATION NAME 1', 
+      station: 'STATION NAME 1',
       group: 'group1',
       start: DateTime('22/03/2018 14:00'),
       end: DateTime('22/03/2018 19:00'),
     },
     {
-      station: 'STATION NAME 1', 
+      station: 'STATION NAME 1',
       group: 'group1',
       start: DateTime('22/03/2018 20:00'),
       end: DateTime('22/03/2018 21:30'),
     },
     {
-      station: 'STATION NAME 2', 
+      station: 'STATION NAME 2',
       group: 'group2',
       start: DateTime('22/03/2018 11:00'),
       end: DateTime('22/03/2018 15:00'),
     },
     {
-      station: 'STATION NAME 2', 
+      station: 'STATION NAME 2',
       group: 'group2',
       start: DateTime('22/03/2018 16:00'),
       end: DateTime('22/03/2018 21:00'),
     },
     {
-      station: 'STATION NAME 3', 
+      station: 'STATION NAME 3',
       group: 'group3',
       start: DateTime('22/03/2018 10:00'),
       end: DateTime('22/03/2018 12:00'),
     },
     {
-      station: 'STATION NAME 3', 
+      station: 'STATION NAME 3',
       group: 'group4',
       start: DateTime('22/03/2018 11:00'),
       end: DateTime('22/03/2018 15:00'),
     },
     {
-      station: 'STATION NAME 3', 
+      station: 'STATION NAME 3',
       group: 'group4',
       start: DateTime('22/03/2018 16:00'),
       end: DateTime('22/03/2018 20:00'),
     },
     {
-      station: 'STATION NAME 3', 
+      station: 'STATION NAME 3',
       group: 'group5',
       start: DateTime('22/03/2018 16:30'),
       end: DateTime('22/03/2018 21:00'),
