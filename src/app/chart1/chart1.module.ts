@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-// import { TimelineChartComponent } from './../visuals/timeline-chart/timeline-chart.component';
 import { GraphComponent } from './../visuals/rm-graph/rm-graph.component';
+import { AxisComponent } from './../visuals/rm-axis/rm-axis.component';
 import { Chart1Component } from './chart1.component';
 
 import { Chart1RoutingModule } from './chart1.routing.module';
@@ -16,6 +16,7 @@ import { Chart1RoutingModule } from './chart1.routing.module';
     ],
     declarations: [
         GraphComponent,
+        AxisComponent,
         Chart1Component
     ],
     exports: [
