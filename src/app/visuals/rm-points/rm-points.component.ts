@@ -1,21 +1,20 @@
 // https://github.com/d3/d3-shape
 // http://bl.ocks.org/d3noob/7030f35b72de721622b8
 import { Component, Input, ChangeDetectorRef, HostListener, ElementRef, ChangeDetectionStrategy } from '@angular/core';
-import { OnInit, AfterViewInit, OnChanges, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, OnChanges, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: '[rm-axis]',
+  selector: '[rm-points]',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
-    <svg:g #xAxis></g>
-    <svg:g #yAxis></g>
+    <svg:g #area></g>
     `,
-  styleUrls: ['./rm-axis.component.css']
+  styleUrls: ['./rm-points.component.css']
 })
-export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
+export class PointsComponent implements AfterViewInit, OnChanges {
 
     public width = 600;
     public height = 600;
@@ -23,13 +22,10 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
     public graph: any;
     public svg: any;
 
-    @ViewChild('xAxis') _xAxis: any;
-    @ViewChild('yAxis') _yAxis: any;
+    @ViewChild('area') _area: any;
 
     // tslint:disable-next-line:no-input-rename
-    @Input('rm-axis') sizes: {width; height; data};
-    // tslint:disable-next-line:member-ordering
-    @Input() data: any[];
+    @Input('rm-area') sizes: {width; height; data};
     // tslint:disable-next-line:member-ordering
     private _data: {date, close}[] = [];
 
@@ -38,37 +34,24 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
         private cd: ChangeDetectorRef
     ) { }
 
-    ngOnInit() {
-
-    }
-
     ngOnChanges(changes: SimpleChanges) {
 
         if (changes.sizes) {
             this._data = this.sizes.data; // changes.data.currentValue.map(item => ({date: item.date, close: item.value}));
             this.updateScales();
-            this.updateAxis();
+            this.updateChart();
         }
 
     }
 
     // tslint:disable-next-line:member-ordering
-    public graph_xAxis: any;
-    // tslint:disable-next-line:member-ordering
-    public graph_yAxis: any;
+    public graph_area: any;
 
     ngAfterViewInit() {
 
-        // this._data = this.sizes.data;
-        // this.updateScales();
+        this.graph_area = d3.select(this._area.nativeElement);
 
-        this.graph_xAxis = d3.select(this._xAxis.nativeElement);
-        // _xAxis.call(d3.axisBottom(this.xAxis));
-
-        this.graph_yAxis = d3.select(this._yAxis.nativeElement);
-        // _yAxis.call(d3.axisLeft(this.yAxis));
-
-        this.initAxis();
+        this.initChart();
 
     }
 
@@ -97,69 +80,14 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
 
     }
 
-    public initAxis() {
+    public updateChart() {
 
-        const svg = this.graph;
-        const width = this.areaWidth,
-            height = this.areaHeight;
-
-        // add the X Axis
-        this.graph_xAxis
-            .attr('class', 'axis x-axis')
-            .attr('transform', 'translate(0,' + (height - 50) + ')');
-
-        // add the Y Axis
-        this.graph_yAxis
-            .attr('class', 'axis y-axis');
-
-        this.updateAxis();
-
-    }
-
-    public updateAxis() {
-
-        if (!this.graph_xAxis) {
+        if (!this.graph_area) {
             return;
         }
 
-        const svg = this.graph;
-        const width = this.areaWidth,
-            height = this.areaHeight;
-
-        this.graph_xAxis
-            .call(d3.axisBottom(this.xAxis));
-
-        this.graph_yAxis
-             .call(d3.axisLeft(this.yAxis));
-
-        this.graph_xAxis.selectAll('line.grid-line')
-            .remove();
-
-        this.graph_yAxis.selectAll('line.grid-line')
-            .remove();
-
-        this.graph_xAxis.selectAll('g.tick')
-            .append('line')
-            .classed('grid-line', true)
-            .attr('x1', 0)
-            .attr('y1', 0)
-            .attr('x2', 0)
-            .attr('y2', -height);
-
-        this.graph_yAxis.selectAll('g.tick')
-            .append('line')
-            .classed('grid-line', true)
-            .attr('x1', 0)
-            .attr('y1', 0)
-            .attr('x2', width)
-            .attr('y2', 0);
-    }
-
-    public updateArea() {
-
         const data = this._data;
 
-        const svg = this.graph;
         const x = this.xAxis,
             y = this.yAxis;
         const width = this.areaWidth,
@@ -172,10 +100,10 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
             .y0(this.areaHeight)
             .y1((d: any) => y(d.close));
 
-        svg.selectAll('path')
+        this.graph_area.selectAll('path')
             .remove();
 
-        svg.selectAll('path')
+        this.graph_area.selectAll('path')
             .data([data])
             .enter().append('path')
             .attr('class', 'area')
@@ -184,17 +112,11 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     public initChart() {
-        // tslint:disable-next-line:no-console
-        console.info('initChart');
 
-        this.updateScales();
         const data = this._data;
 
-        const svg = this.graph;
         const x = this.xAxis,
             y = this.yAxis;
-        const width = this.areaWidth,
-            height = this.areaHeight;
 
         const area = d3.area()
             .curve(d3.curveNatural)
@@ -211,7 +133,7 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
         // const tf = d3.timeFormat('%I:%M %p');
 
         // add the area
-         svg.selectAll('path.area')
+        this.graph_area.selectAll('path.area')
              .data([data])
              .enter().append('path')
              .attr('class', 'area')
@@ -248,8 +170,6 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
         //     .data([data])
         //     .attr("class", "line")
         //     .attr("d", <any>this._line);
-
-        this.initAxis();
 
     }
 

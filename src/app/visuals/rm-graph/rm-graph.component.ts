@@ -12,6 +12,7 @@ import * as d3 from 'd3';
   template: `
     <svg #svg [attr.width]="width" [attr.height]="height">
         <svg:g [attr.transform]="'translate(' + margin.left + ',' + margin.top + ')'">
+            <g [rm-area]="graphRect"></g>
             <g [rm-axis]="graphRect"></g>
         </g>
     </svg>
