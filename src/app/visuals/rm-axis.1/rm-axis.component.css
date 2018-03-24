@@ -1,0 +1,85 @@
+rm-axis {
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+  }
+  
+  .area {
+    fill-opacity: 0.8;
+    fill: #d6eaff;
+  }
+  
+  .grid-line {
+    stroke: #000;
+    stroke-width: 0.5;
+    stroke-opacity: 0.3;
+  }
+
+  .domain {
+    display: none;
+  }
+
+  .tooltip {
+    position: absolute;
+    text-align: center;
+    font: 12px sans-serif;
+    background: #fff;
+    border-radius: 1px;
+    border-width: 1px;
+    border-color: #000;
+    pointer-events: none;
+    border-style: solid;
+    opacity: 0;
+    padding: 15px 15px 10px 15px;
+  }
+
+  .tooltip .info {
+    font: 12px sans-serif;
+    text-align: left;
+    padding-bottom: 5px;
+  }
+
+  .info .value {
+    font-weight: bold;
+  }
+
+  .tooltip.middle::before {
+    content: ' ';
+    position: absolute;
+    left: 20px;
+    top: -9px;
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+  }
+
+  .tooltip::before {
+    /* content: ' ';
+    position: absolute;
+    left: 20px;
+    top: -9px;
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg); */
+  }

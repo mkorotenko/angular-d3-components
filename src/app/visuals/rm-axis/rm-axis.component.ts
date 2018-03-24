@@ -15,81 +15,49 @@ import * as d3 from 'd3';
     `,
   styleUrls: ['./rm-axis.component.css']
 })
-export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
-
-    public width = 600;
-    public height = 600;
-
-    public graph: any;
-    public svg: any;
+export class AxisComponent implements AfterViewInit, OnChanges {
 
     @ViewChild('xAxis') _xAxis: any;
     @ViewChild('yAxis') _yAxis: any;
-
-    // tslint:disable-next-line:no-input-rename
-    @Input('rm-axis') sizes: {width; height; data};
-    // tslint:disable-next-line:member-ordering
-    @Input() data: any[];
-    // tslint:disable-next-line:member-ordering
-    private _data: {date, close}[] = [];
 
     constructor(
         private el: ElementRef,
         private cd: ChangeDetectorRef
     ) { }
 
-    ngOnInit() {
-
-    }
+    // tslint:disable-next-line:no-input-rename
+    @Input('rm-axis') sizes: {width; height; data};
 
     ngOnChanges(changes: SimpleChanges) {
 
-        if (changes.data) {
-            this._data = changes.data.currentValue.map(item => ({date: item.date, close: item.value}));
+        if (changes.sizes) {
+            this._data = this.sizes.data;
+            this.updateScales();
+            this.updateChart();
         }
 
     }
 
     // tslint:disable-next-line:member-ordering
+    private _data: {date, close}[] = [];
+    // tslint:disable-next-line:member-ordering
     public graph_xAxis: any;
     // tslint:disable-next-line:member-ordering
     public graph_yAxis: any;
-
-    ngAfterViewInit() {
-
-        this._data = this.sizes.data;
-        this.updateScales();
-
-        this.graph_xAxis = d3.select(this._xAxis.nativeElement);
-        // _xAxis.call(d3.axisBottom(this.xAxis));
-
-        this.graph_yAxis = d3.select(this._yAxis.nativeElement);
-        // _yAxis.call(d3.axisLeft(this.yAxis));
-
-        this.initAxis();
-
-    }
-
-    @HostListener('window:resize', ['$event'])
-    onResize(event) {
-
-        // const rect = this.el.nativeElement.getBoundingClientRect();
-        // this.width = rect.width;
-        // this.height = rect.height;
-
-        // this.svg.attr('width', this.width)
-        //         .attr('height', this.height);
-
-        // this.updateScales();
-        // this.updateArea();
-        // this.updateAxis();
-
-    }
-
     // tslint:disable-next-line:member-ordering
     private xAxis: any;
     // tslint:disable-next-line:member-ordering
     private yAxis: any;
+
+    ngAfterViewInit() {
+
+        this.graph_xAxis = d3.select(this._xAxis.nativeElement);
+
+        this.graph_yAxis = d3.select(this._yAxis.nativeElement);
+
+        this.initChart();
+
+    }
 
     private get areaWidth(): number {
         return this.sizes.width;
@@ -111,30 +79,26 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
 
     }
 
-    public initAxis() {
-
-        const svg = this.graph;
-        const width = this.areaWidth,
-            height = this.areaHeight;
+    public initChart() {
 
         // add the X Axis
         this.graph_xAxis
             .attr('class', 'axis x-axis')
-            .attr('transform', 'translate(0,' + (height - 50) + ')');
+            .attr('transform', 'translate(0,' + (this.areaHeight - 50) + ')');
 
         // add the Y Axis
         this.graph_yAxis
             .attr('class', 'axis y-axis');
 
-        this.updateAxis();
+        this.updateChart();
 
     }
 
-    public updateAxis() {
+    public updateChart() {
 
-        const svg = this.graph;
-        const width = this.areaWidth,
-            height = this.areaHeight;
+        if (!this.graph_xAxis) {
+            return;
+        }
 
         this.graph_xAxis
             .call(d3.axisBottom(this.xAxis));
@@ -154,118 +118,15 @@ export class AxisComponent implements OnInit, AfterViewInit, OnChanges {
             .attr('x1', 0)
             .attr('y1', 0)
             .attr('x2', 0)
-            .attr('y2', -height);
+            .attr('y2', -this.areaHeight);
 
         this.graph_yAxis.selectAll('g.tick')
             .append('line')
             .classed('grid-line', true)
             .attr('x1', 0)
             .attr('y1', 0)
-            .attr('x2', width)
+            .attr('x2', this.areaWidth)
             .attr('y2', 0);
     }
-
-    public updateArea() {
-
-        const data = this._data;
-
-        const svg = this.graph;
-        const x = this.xAxis,
-            y = this.yAxis;
-        const width = this.areaWidth,
-            height = this.areaHeight;
-
-        const area = d3.area()
-            .curve(d3.curveNatural)
-            .x((d: any) => x(d.date))
-            // .y((d: any) => y(d.close));
-            .y0(this.areaHeight)
-            .y1((d: any) => y(d.close));
-
-        svg.selectAll('path')
-            .remove();
-
-        svg.selectAll('path')
-            .data([data])
-            .enter().append('path')
-            .attr('class', 'area')
-            .attr('d', area);
-
-    }
-
-    public initChart() {
-        // tslint:disable-next-line:no-console
-        console.info('initChart');
-
-        this.updateScales();
-        const data = this._data;
-
-        const svg = this.graph;
-        const x = this.xAxis,
-            y = this.yAxis;
-        const width = this.areaWidth,
-            height = this.areaHeight;
-
-        const area = d3.area()
-            .curve(d3.curveNatural)
-            .x((d: any) => x(d.date))
-            // .y((d: any) => y(d.close));
-            .y0(this.areaHeight)
-            .y1((d: any) => y(d.close));
-
-        // this._line = d3.line()
-        //     .curve(d3.curveNatural)
-        //     .x((d: any): number => x(d.date))
-        //     .y((d: any): number => y(d.close));
-
-        // const tf = d3.timeFormat('%I:%M %p');
-
-        // add the area
-         svg.selectAll('path.area')
-             .data([data])
-             .enter().append('path')
-             .attr('class', 'area')
-             .attr('d', area);
-        // this.updateArea();
-        // svg.selectAll('dot')
-        //     .data(data)
-        //     .enter().append('circle')
-        //     .attr('r', 4)
-        //     .attr('cx', (d) => x(d.date))
-        //     .attr('cy', (d) => y(d.close))
-        //     .on('mouseover', (d) => {
-        //         this.startTime = tf(d.date);
-        //         this.endTime = tf(d.date);
-        //         this.sales = '$' + d.close;
-        //         this.hours = '1';
-
-        //         this.tooltip
-        //             .style('left', (d3.event.pageX) + 'px')
-        //             .style('top', (d3.event.pageY) - 85 + 'px')
-        //             .transition().duration(200)
-        //             .style('opacity', 1);
-
-        //         this.cd.markForCheck();
-        //     })
-        //     .on('mouseout', (d) => {
-        //         this.tooltip.transition()
-        //             .duration(500)
-        //             .style('opacity', 0);
-        //     });
-
-        // add the valueline path.
-        // svg.append("path")
-        //     .data([data])
-        //     .attr("class", "line")
-        //     .attr("d", <any>this._line);
-
-        this.initAxis();
-
-    }
-
-    // tslint:disable-next-line:member-ordering
-    public line: any;
-    // tslint:disable-next-line:member-ordering
-    private _line: any;
 
 }
