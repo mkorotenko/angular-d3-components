@@ -45,7 +45,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
 
     public margin = {top: 20, right: 20, bottom: 30, left: 50};
     public get graphRect(): {width; height, data} {
-        return {width: this.areaWidth, height: this.height, data: this._data};
+        return {width: this.areaWidth, height: this.areaHeight, data: this._data};
     }
 
     @ViewChild('svg') _svg: any;

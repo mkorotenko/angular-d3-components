@@ -58,7 +58,7 @@ export class AreaComponent implements AfterViewInit, OnChanges {
         return this.sizes.width;
     }
     private get areaHeight(): number {
-        return this.sizes.height - 50;
+        return this.sizes.height;
     }
 
     private updateScales() {
@@ -88,7 +88,7 @@ export class AreaComponent implements AfterViewInit, OnChanges {
         const area = d3.area()
             .curve(d3.curveNatural)
             .x((d: any) => x(d.date))
-            // .y((d: any) => y(d.close));
+             //  .y((d: any) => y(d.close))
             .y0(this.areaHeight)
             .y1((d: any) => y(d.close));
 

@@ -72,7 +72,7 @@ export class AxisComponent implements AfterViewInit, OnChanges {
         const yMin = d3.min(this._data, (d: any) => d.close);
 
         this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
-        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight - 50, 0]);
+        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
 
         this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
         this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
@@ -84,7 +84,7 @@ export class AxisComponent implements AfterViewInit, OnChanges {
         // add the X Axis
         this.graph_xAxis
             .attr('class', 'axis x-axis')
-            .attr('transform', 'translate(0,' + (this.areaHeight - 50) + ')');
+            .attr('transform', 'translate(0,' + (this.areaHeight) + ')');
 
         // add the Y Axis
         this.graph_yAxis
