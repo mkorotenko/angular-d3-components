@@ -94,8 +94,10 @@ export class PointsComponent implements AfterViewInit, OnChanges {
             .attr('class', 'dot')
             .attr('r', 4)
             .attr('cx', (d) => x(d.date))
-            .attr('cy', (d) => y(d.close));
-
+            .attr('cy', (d) => y(d.close))
+            .on('click', this.onClick.bind(this))
+            .on('mouseover', this.onMouseOver.bind(this))
+            .on('mouseout', this.onMouseOut.bind(this));
     }
 
     public initChart() {
@@ -112,33 +114,26 @@ export class PointsComponent implements AfterViewInit, OnChanges {
              .attr('class', 'dot')
              .attr('r', 4)
              .attr('cx', (d) => x(d.date))
-             .attr('cy', (d) => y(d.close));
+             .attr('cy', (d) => y(d.close))
+             .on('click', this.onClick.bind(this))
+             .on('mouseover', this.onMouseOver.bind(this))
+             .on('mouseout', this.onMouseOut.bind(this));
 
     }
 
+    private onClick(point) {
+        // tslint:disable-next-line:no-console
+        console.info('onClick', point );
+    }
+
+    private onMouseOver(point) {
+        // tslint:disable-next-line:no-console
+        // console.info('mouseover', point );
+    }
+
+    private onMouseOut(point) {
+        // tslint:disable-next-line:no-console
+        // console.info('onMouseOut', point );
+    }
+
 }
-        // svg.selectAll('dot')
-        //     .data(data)
-        //     .enter().append('circle')
-        //     .attr('r', 4)
-        //     .attr('cx', (d) => x(d.date))
-        //     .attr('cy', (d) => y(d.close))
-        //     .on('mouseover', (d) => {
-        //         this.startTime = tf(d.date);
-        //         this.endTime = tf(d.date);
-        //         this.sales = '$' + d.close;
-        //         this.hours = '1';
-
-        //         this.tooltip
-        //             .style('left', (d3.event.pageX) + 'px')
-        //             .style('top', (d3.event.pageY) - 85 + 'px')
-        //             .transition().duration(200)
-        //             .style('opacity', 1);
-
-        //         this.cd.markForCheck();
-        //     })
-        //     .on('mouseout', (d) => {
-        //         this.tooltip.transition()
-        //             .duration(500)
-        //             .style('opacity', 0);
-        //     });
