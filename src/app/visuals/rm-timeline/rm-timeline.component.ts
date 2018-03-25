@@ -111,7 +111,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             .range(['#202576', '#202576']);
 
         const timeline = new Timeline();
-        timeline.size([this.areaWidth, 180])
+        timeline.size([this.areaWidth, 480])
             .extent([DateTime('22/03/2018 10:00').getTime(), DateTime('22/03/2018 21:00').getTime()])
             .padding(3)
             .maxBandHeight(20);
@@ -124,10 +124,11 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             const onlyThisType = csv.filter((d) => d.group === type);
             const theseBands = timeline.timeline(onlyThisType);
 
-            const bar = this.graph_timeline.selectAll('g')
+            const bar = this.graph_timeline.selectAll('g.timeline_' + i)
                 .data(theseBands)
                 .enter().append('g')
-                .attr('transform', 'translate(0,' + (height - (45 + (i * 90))) + ')')
+                .attr('class', 'g.timeline_' + i)
+                .attr('transform', 'translate(0,' + (height - (45 + (i * 45))) + ')')
                 .attr('class', 'timeline');
 
             bar.append('rect')
