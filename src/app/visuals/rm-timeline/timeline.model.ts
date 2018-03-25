@@ -9,7 +9,7 @@ export class Timeline {
     startAccessor = (d) => d.start;
     endAccessor = (d) => d.end;
     // tslint:disable-next-line:member-ordering
-    _size = [500, 100];
+    _size = [0, 0];
     // tslint:disable-next-line:member-ordering
     timelineExtent = [-Infinity, Infinity];
     // tslint:disable-next-line:member-ordering
@@ -142,7 +142,7 @@ export class Timeline {
 
     size (_x): Timeline {
  if (!arguments.length) { return <any>this.size; }
- this.size = _x;
+ this._size = _x;
  return this;
     }
 

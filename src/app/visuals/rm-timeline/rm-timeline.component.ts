@@ -117,7 +117,8 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             .maxBandHeight(20);
 
         const csv = this.csv;
-
+        const x = this.xAxis,
+            y = this.yAxis;
         const height = this.areaHeight;
         types.forEach((type, i) => {
 
@@ -127,13 +128,17 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             const bar = this.graph_timeline.selectAll('g.timeline_' + i)
                 .data(theseBands)
                 .enter().append('g')
-                .attr('class', 'g.timeline_' + i)
+                .attr('class', 'timeline-group timeline_' + i)
                 .attr('transform', 'translate(0,' + (height - (45 + (i * 45))) + ')')
                 .attr('class', 'timeline');
 
             bar.append('rect')
                 .attr('rx', 10)
-                .attr('x', (d: {start}) => d.start)
+                .attr('x', (d: {start}) => {
+                    // tslint:disable-next-line:no-console
+                    console.info('rect start', d.start, x(d.start));
+                    return d.start;
+                })
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
                 .attr('width', (d: {start, end}) => (d.end - d.start));
