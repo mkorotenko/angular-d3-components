@@ -10,22 +10,16 @@ import * as d3 from 'd3';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
-    <svg:g #area></g>
+    <svg:g #points></g>
     `,
   styleUrls: ['./rm-points.component.css']
 })
 export class PointsComponent implements AfterViewInit, OnChanges {
 
-    public width = 600;
-    public height = 600;
-
-    public graph: any;
-    public svg: any;
-
-    @ViewChild('area') _area: any;
+    @ViewChild('points') _points: any;
 
     // tslint:disable-next-line:no-input-rename
-    @Input('rm-area') sizes: {width; height; data};
+    @Input('rm-points') sizes: {width; height; data};
     // tslint:disable-next-line:member-ordering
     private _data: {date, close}[] = [];
 
@@ -45,11 +39,11 @@ export class PointsComponent implements AfterViewInit, OnChanges {
     }
 
     // tslint:disable-next-line:member-ordering
-    public graph_area: any;
+    public graph_points: any;
 
     ngAfterViewInit() {
 
-        this.graph_area = d3.select(this._area.nativeElement);
+        this.graph_points = d3.select(this._points.nativeElement);
 
         this.initChart();
 
@@ -73,7 +67,7 @@ export class PointsComponent implements AfterViewInit, OnChanges {
         const yMin = d3.min(this._data, (d: any) => d.close);
 
         this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
-        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight - 50, 0]);
+        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
 
         this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
         this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
@@ -82,7 +76,7 @@ export class PointsComponent implements AfterViewInit, OnChanges {
 
     public updateChart() {
 
-        if (!this.graph_area) {
+        if (!this.graph_points) {
             return;
         }
 
@@ -90,24 +84,17 @@ export class PointsComponent implements AfterViewInit, OnChanges {
 
         const x = this.xAxis,
             y = this.yAxis;
-        const width = this.areaWidth,
-            height = this.areaHeight;
 
-        const area = d3.area()
-            .curve(d3.curveNatural)
-            .x((d: any) => x(d.date))
-            // .y((d: any) => y(d.close));
-            .y0(this.areaHeight)
-            .y1((d: any) => y(d.close));
-
-        this.graph_area.selectAll('path')
+        this.graph_points.selectAll('circle.dot')
             .remove();
 
-        this.graph_area.selectAll('path')
-            .data([data])
-            .enter().append('path')
-            .attr('class', 'area')
-            .attr('d', area);
+        this.graph_points.selectAll('circle.dot')
+            .data(data)
+            .enter().append('circle')
+            .attr('class', 'dot')
+            .attr('r', 4)
+            .attr('cx', (d) => x(d.date))
+            .attr('cy', (d) => y(d.close));
 
     }
 
@@ -118,27 +105,18 @@ export class PointsComponent implements AfterViewInit, OnChanges {
         const x = this.xAxis,
             y = this.yAxis;
 
-        const area = d3.area()
-            .curve(d3.curveNatural)
-            .x((d: any) => x(d.date))
-            // .y((d: any) => y(d.close));
-            .y0(this.areaHeight)
-            .y1((d: any) => y(d.close));
+        // add the points
+        this.graph_points.selectAll('circle.dot')
+             .data(data)
+             .enter().append('circle')
+             .attr('class', 'dot')
+             .attr('r', 4)
+             .attr('cx', (d) => x(d.date))
+             .attr('cy', (d) => y(d.close));
 
-        // this._line = d3.line()
-        //     .curve(d3.curveNatural)
-        //     .x((d: any): number => x(d.date))
-        //     .y((d: any): number => y(d.close));
+    }
 
-        // const tf = d3.timeFormat('%I:%M %p');
-
-        // add the area
-        this.graph_area.selectAll('path.area')
-             .data([data])
-             .enter().append('path')
-             .attr('class', 'area')
-             .attr('d', area);
-        // this.updateArea();
+}
         // svg.selectAll('dot')
         //     .data(data)
         //     .enter().append('circle')
@@ -164,18 +142,3 @@ export class PointsComponent implements AfterViewInit, OnChanges {
         //             .duration(500)
         //             .style('opacity', 0);
         //     });
-
-        // add the valueline path.
-        // svg.append("path")
-        //     .data([data])
-        //     .attr("class", "line")
-        //     .attr("d", <any>this._line);
-
-    }
-
-    // tslint:disable-next-line:member-ordering
-    public line: any;
-    // tslint:disable-next-line:member-ordering
-    private _line: any;
-
-}
