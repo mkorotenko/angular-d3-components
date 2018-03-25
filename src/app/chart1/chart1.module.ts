@@ -6,6 +6,7 @@ import { GraphComponent } from './../visuals/rm-graph/rm-graph.component';
 import { AxisComponent } from './../visuals/rm-axis/rm-axis.component';
 import { AreaComponent } from './../visuals/rm-area/rm-area.component';
 import { PointsComponent } from './../visuals/rm-points/rm-points.component';
+import { TimelineComponent } from './../visuals/rm-timeline/rm-timeline.component';
 
 import { Chart1Component } from './chart1.component';
 
@@ -22,6 +23,7 @@ import { Chart1RoutingModule } from './chart1.routing.module';
         AxisComponent,
         AreaComponent,
         PointsComponent,
+        TimelineComponent,
         Chart1Component
     ],
     exports: [
