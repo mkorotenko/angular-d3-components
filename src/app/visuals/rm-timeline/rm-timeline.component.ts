@@ -83,21 +83,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             return;
         }
 
-        const data = this._data;
-
-        const x = this.xAxis,
-            y = this.yAxis;
-
-        // this.graph_timeline.selectAll('circle.dot')
-        //     .remove();
-
-        // this.graph_timeline.selectAll('circle.dot')
-        //     .data(data)
-        //     .enter().append('circle')
-        //     .attr('class', 'dot')
-        //     .attr('r', 4)
-        //     .attr('cx', (d) => x(d.date))
-        //     .attr('cy', (d) => y(d.close));
+        this.initChart();
 
     }
 
@@ -125,20 +111,19 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             const onlyThisType = csv.filter((d) => d.group === type);
             const theseBands = timeline.timeline(onlyThisType);
 
+            this.graph_timeline.selectAll('g.timeline_' + i)
+                .remove();
+
             const bar = this.graph_timeline.selectAll('g.timeline_' + i)
                 .data(theseBands)
                 .enter().append('g')
-                .attr('class', 'timeline-group timeline_' + i)
-                .attr('transform', 'translate(0,' + (height - (45 + (i * 45))) + ')')
-                .attr('class', 'timeline');
+                .attr('transform', 'translate(0,' + (height - (25 + (i * 35))) + ')')
+                // .attr('class', 'timeline-group')
+                .attr('class', 'timeline-group timeline_'+ i);
 
             bar.append('rect')
                 .attr('rx', 10)
-                .attr('x', (d: {start}) => {
-                    // tslint:disable-next-line:no-console
-                    console.info('rect start', d.start, x(d.start));
-                    return d.start;
-                })
+                .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
                 .attr('width', (d: {start, end}) => (d.end - d.start));
@@ -159,7 +144,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
         {
             station: 'STATION NAME 1',
             group: 'group1',
-            start: DateTime('22/03/2018 10:30'),
+            start: DateTime('22/03/2018 09:30'),
             end: DateTime('22/03/2018 13:00'),
         },
         {
