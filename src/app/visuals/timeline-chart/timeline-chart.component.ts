@@ -70,47 +70,47 @@ export class TimelineChartComponent implements OnInit, AfterViewInit, OnChanges 
         const width = +gBox.width - this.margin.left - this.margin.right,
             height = +gBox.height - this.margin.top - this.margin.bottom;
 
-        let types = ["Colonial"];
+            const types = ['Colonial'];
 
-        let colorScale = d3.scaleOrdinal()
+        const colorScale = d3.scaleOrdinal()
           .domain(types)
-          .range(["#202576"]);
-        
-          var timeline = new Timeline();
-          timeline.size([500,80])
-            .extent(["7/4/1836", "12/31/1876"])
+          .range(['#202576']);
+
+          const timeline = new Timeline();
+          timeline.size([500, 80])
+            .extent(['7/4/1836', '12/31/1876'])
             .padding(3)
             .maxBandHeight(20);
-  
-            let csv = this.csv;
-            let svg = this.svg;
+
+            const csv = this.csv;
+            const svg = this.svg;
 
             types.forEach(function (type, i) {
-                
-                let onlyThisType = csv.filter((d) => d.sphere === type);
-                let theseBands = timeline.timeline(onlyThisType);
 
-                var bar = svg.selectAll("g")
+                const onlyThisType = csv.filter((d) => d.sphere === type);
+                const theseBands = timeline.timeline(onlyThisType);
+
+                const bar = svg.selectAll('g')
                     .data(theseBands)
-                    .enter().append("g")
-                    .attr("transform", "translate(100," + (45 + (i * 90)) + ")")
-                    .attr("class", "timeline");
+                    .enter().append('g')
+                    .attr('transform', 'translate(100,' + (45 + (i * 90)) + ')')
+                    .attr('class', 'timeline');
 
-                bar.append("rect")
-                    .attr("rx", 10)
-                    .attr("x", (d: {start}) => d.start)
-                    .attr("y", (d: {y}) => d.y)
-                    .attr("height", (d: {dy}) => d.dy)
-                    .attr("width", (d: {start,end}) => (d.end - d.start));
+                bar.append('rect')
+                    .attr('rx', 10)
+                    .attr('x', (d: {start}) => d.start)
+                    .attr('y', (d: {y}) => d.y)
+                    .attr('height', (d: {dy}) => d.dy)
+                    .attr('width', (d: {start, end}) => (d.end - d.start));
 
-                bar.append("text")
-                    .attr("x", (d: {start,end}) => (d.start + (d.end - d.start)/2))
-                    .attr("y", (d: {y}) => d.y)
-                    .attr("dy", '1em')
-                    .attr("font-size", '12px')
+                bar.append('text')
+                    .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
+                    .attr('y', (d: {y}) => d.y)
+                    .attr('dy', '1em')
+                    .attr('font-size', '12px')
                     .text((d: {name}) => d.name);
-              
-              })
+
+              });
 
     }
 
@@ -131,6 +131,7 @@ export class TimelineChartComponent implements OnInit, AfterViewInit, OnChanges 
         };
     }
 
+    // tslint:disable-next-line:member-ordering
     public csv = [
         // {
         //     "name": "First Barbary War",
@@ -169,10 +170,10 @@ export class TimelineChartComponent implements OnInit, AfterViewInit, OnChanges 
         //     "sphere": "Colonial"
         // },
         {
-            "name": "Taiping Rebellion",
-            "start": "01/01/1850",
-            "end": "12/31/1864",
-            "sphere": "Colonial"
+            'name': 'Taiping Rebellion',
+            'start': '01/01/1850',
+            'end': '12/31/1864',
+            'sphere': 'Colonial'
         },
         // {
         //     "name": "First Fiji Expedition",
@@ -181,16 +182,16 @@ export class TimelineChartComponent implements OnInit, AfterViewInit, OnChanges 
         //     "sphere": "Colonial"
         // },
         {
-            "name": "Second Opium War",
-            "start": "01/01/1856",
-            "end": "12/31/1859",
-            "sphere": "Colonial"
+            'name': 'Second Opium War',
+            'start': '01/01/1856',
+            'end': '12/31/1859',
+            'sphere': 'Colonial'
         },
         {
-            "name": "Second Fiji Expedition",
-            "start": "01/01/1858",
-            "end": "12/31/1858",
-            "sphere": "Colonial"
+            'name': 'Second Fiji Expedition',
+            'start': '01/01/1858',
+            'end': '12/31/1858',
+            'sphere': 'Colonial'
         },
         // {
         //     "name": "Bombardment of Qui Nhơn",
@@ -216,5 +217,5 @@ export class TimelineChartComponent implements OnInit, AfterViewInit, OnChanges 
         //     "end": "12/31/1871",
         //     "sphere": "Colonial"
         // },
-    ]
+    ];
 }

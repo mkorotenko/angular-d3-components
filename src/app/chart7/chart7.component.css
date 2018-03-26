@@ -1,0 +1,9 @@
+app-chart1 {
+    display: block;
+    padding: 20px 20px;
+}
+
+.chart-container {
+    width: 70%;
+    height: 500px;
+}

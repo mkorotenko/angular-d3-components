@@ -21,8 +21,7 @@ import * as d3 from 'd3';
         <div class="info">
             Projected labor hours: <span class="value">{{hours}}</span>
         </div>
-    </div>
-  `,
+    </div>`,
   styleUrls: ['./area-chart.component.css']
 })
 export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
@@ -105,6 +104,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
                 .attr('height', this.height);
 
         this.updateScales();
+        this.updateArea();
         this.updateAxis();
 
     }
@@ -203,6 +203,9 @@ export class AreaChartComponent implements OnInit, AfterViewInit, OnChanges {
             // .y((d: any) => y(d.close));
             .y0(this.areaHeight)
             .y1((d: any) => y(d.close));
+
+        svg.selectAll('path')
+            .remove();
 
         svg.selectAll('path')
             .data([data])
