@@ -1,0 +1,9 @@
+g.timeline rect {
+  fill: #202576;
+  stroke: black;
+  stroke-width: 1;
+}
+g.timeline text {
+fill: #fff;
+text-anchor: middle;
+}

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import * as d3 from '../shared/utils/d3-datetime';
 
 export class ScheduleNode {
@@ -16,12 +16,11 @@ export class ChartNode {
 const DateTime = d3.timeParse('%d/%m/%Y %H:%M');
 
 @Component({
-  selector: 'app-chart1',
-  templateUrl: './chart1.component.html',
-  styleUrls: ['./chart1.component.css'],
-  encapsulation: ViewEncapsulation.None
+  selector: 'app-chart7',
+  templateUrl: './chart7.component.html',
+  styleUrls: ['./chart7.component.css']
 })
-export class Chart1Component {
+export class Chart7Component {
 
   constructor() {
     // d3.timeParse('%d/%m/%y %H:%M')
