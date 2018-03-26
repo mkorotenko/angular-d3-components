@@ -45,7 +45,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
     public svg: any;
     public tooltip: any;
 
-    public margin = {top: 20, right: 20, bottom: 30, left: 50};
+    public margin = {top: 20, right: 0, bottom: 30, left: 50};
     public get graphRect(): {width; height, data} {
         return {width: this.areaWidth, height: this.areaHeight, data: this._data};
     }

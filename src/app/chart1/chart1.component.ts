@@ -88,6 +88,10 @@ export class Chart1Component {
 
   public area: ChartNode[] = [
     {
+      date: DateTime('22/03/2018 09:30'),
+      value: 120,
+    },
+    {
       date: DateTime('22/03/2018 10:00'),
       value: 400,
     },
@@ -134,6 +138,10 @@ export class Chart1Component {
     {
       date: DateTime('22/03/2018 21:00'),
       value: 650,
+    },
+    {
+      date: DateTime('22/03/2018 21:30'),
+      value: 410,
     },
   ];
 

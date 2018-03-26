@@ -71,11 +71,19 @@ export class AxisComponent implements AfterViewInit, OnChanges {
         const yMax = d3.max(this._data, (d: any) => d.close);
         const yMin = d3.min(this._data, (d: any) => d.close);
 
-        this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
-        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
+        const xAxis = d3.scaleTime().range([0, this.areaWidth]);
+        const yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
 
-        this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
-        this.yAxis.domain([0, yMax + yMax * 0.05]);
+        xAxis.domain(d3.extent(this._data, (d: any) => d.date));
+        yAxis.domain([0, yMax + yMax * 0.05]);
+
+        const timeFormat = d3.timeFormat('%I');
+        const timeAMPM = d3.timeFormat('%p');
+        this.xAxis = d3.axisBottom(xAxis)
+            .tickFormat((d: Date): string => ('' + Number(timeFormat(d)) + timeAMPM(d)));
+        this.yAxis = d3.axisLeft(yAxis)
+            .tickSize(0)
+            .tickFormat((d: number): string => ('$' + (d / 1000) + 'K'));
 
     }
 
@@ -101,10 +109,10 @@ export class AxisComponent implements AfterViewInit, OnChanges {
         }
 
         this.graph_xAxis
-            .call(d3.axisBottom(this.xAxis));
+            .call(this.xAxis);
 
         this.graph_yAxis
-             .call(d3.axisLeft(this.yAxis));
+             .call(this.yAxis);
 
         this.graph_xAxis.selectAll('line.grid-line')
             .remove();

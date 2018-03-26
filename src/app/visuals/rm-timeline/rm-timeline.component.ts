@@ -98,7 +98,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
         const timeline = new Timeline();
         timeline.size([this.areaWidth, 480])
-            .extent([DateTime('22/03/2018 10:00').getTime(), DateTime('22/03/2018 21:00').getTime()])
+            .extent([DateTime('22/03/2018 09:30').getTime(), DateTime('22/03/2018 21:30').getTime()])
             .padding(3)
             .maxBandHeight(22);
 
