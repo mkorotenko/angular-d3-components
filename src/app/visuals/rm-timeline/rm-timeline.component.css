@@ -1,9 +1,9 @@
 g.timeline-group rect {
-  fill: #202576;
-  stroke: black;
+  fill: #1f2576;
   stroke-width: 1;
 }
 g.timeline-group text {
-fill: #fff;
-text-anchor: middle;
+  fill: #fff;
+  text-anchor: middle;
+  font-size: 11px;
 }

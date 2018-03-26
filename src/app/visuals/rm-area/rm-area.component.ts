@@ -70,7 +70,7 @@ export class AreaComponent implements AfterViewInit, OnChanges {
         this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
 
         this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
-        this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
+        this.yAxis.domain([0, yMax + yMax * 0.05]);
 
     }
 

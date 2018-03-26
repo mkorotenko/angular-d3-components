@@ -73,7 +73,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
         this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
 
         this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
-        this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
+        this.yAxis.domain([0, yMax + yMax * 0.05]);
 
     }
 
@@ -100,7 +100,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
         timeline.size([this.areaWidth, 480])
             .extent([DateTime('22/03/2018 10:00').getTime(), DateTime('22/03/2018 21:00').getTime()])
             .padding(3)
-            .maxBandHeight(20);
+            .maxBandHeight(22);
 
         const csv = this.csv;
         const x = this.xAxis,
@@ -117,9 +117,9 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             const bar = this.graph_timeline.selectAll('g.timeline_' + i)
                 .data(theseBands)
                 .enter().append('g')
-                .attr('transform', 'translate(0,' + (height - (25 + (i * 35))) + ')')
+                .attr('transform', 'translate(0,' + (height - (25 + (i * 25))) + ')')
                 // .attr('class', 'timeline-group')
-                .attr('class', 'timeline-group timeline_'+ i);
+                .attr('class', 'timeline-group timeline_' + i);
 
             bar.append('rect')
                 .attr('rx', 10)
@@ -131,8 +131,8 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             bar.append('text')
                 .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
                 .attr('y', (d: {y}) => d.y)
-                .attr('dy', '1em')
-                .attr('font-size', '12px')
+                .attr('dy', '1.1em')
+                // .attr('font-size', '12px')
                 .text((d: {station}) => d.station);
 
         });
