@@ -68,21 +68,28 @@ export class AxisComponent implements AfterViewInit, OnChanges {
 
     private updateScales() {
 
+        const width = this.areaWidth;
+        const height = this.areaHeight;
+
         const yMax = d3.max(this._data, (d: any) => d.close);
         const yMin = d3.min(this._data, (d: any) => d.close);
 
-        const xAxis = d3.scaleTime().range([0, this.areaWidth]);
-        const yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
+        const xAxis = d3.scaleTime().range([0, width]);
+        const yAxis = d3.scaleLinear().rangeRound([height, 0]);
 
         xAxis.domain(d3.extent(this._data, (d: any) => d.date));
         yAxis.domain([0, yMax + yMax * 0.05]);
 
         const timeFormat = d3.timeFormat('%I');
         const timeAMPM = d3.timeFormat('%p');
+
         this.xAxis = d3.axisBottom(xAxis)
+            .tickSize(-height)
+            .tickPadding(5)
             .tickFormat((d: Date): string => ('' + Number(timeFormat(d)) + timeAMPM(d)));
+
         this.yAxis = d3.axisLeft(yAxis)
-            .tickSize(0)
+            .tickSize(-width)
             .tickFormat((d: number): string => ('$' + (d / 1000) + 'K'));
 
     }
@@ -112,29 +119,25 @@ export class AxisComponent implements AfterViewInit, OnChanges {
             .call(this.xAxis);
 
         this.graph_yAxis
-             .call(this.yAxis);
+            .call(this.yAxis);
 
-        this.graph_xAxis.selectAll('line.grid-line')
-            .remove();
+        this.graph_xAxis
+            .selectAll('.tick line')
+            .attr('y1', 10)
+            .classed('grid-line', true);
 
-        this.graph_yAxis.selectAll('line.grid-line')
-            .remove();
+        this.graph_xAxis
+            .selectAll('.tick text')
+            .attr('dy', 15);
 
-        this.graph_xAxis.selectAll('g.tick')
-            .append('line')
-            .classed('grid-line', true)
-            .attr('x1', 0)
-            .attr('y1', 0)
-            .attr('x2', 0)
-            .attr('y2', -this.areaHeight);
+        this.graph_yAxis
+            .selectAll('.tick line')
+            .classed('grid-line', true);
 
-        this.graph_yAxis.selectAll('g.tick')
-            .append('line')
-            .classed('grid-line', true)
-            .attr('x1', 0)
-            .attr('y1', 0)
-            .attr('x2', this.areaWidth)
-            .attr('y2', 0);
+        this.graph_yAxis
+            .selectAll('.tick text')
+            .attr('dx', -5);
+
     }
 
 }
