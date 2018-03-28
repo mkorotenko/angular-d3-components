@@ -22,9 +22,14 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
     @ViewChild('timeline') _timeline: any;
 
     // tslint:disable-next-line:no-input-rename
-    @Input('rm-timeline') sizes: {width; height; data};
+    @Input('rm-timeline') graphData: {
+        width: number,
+        height: number,
+        data: {station; group; start; end}[]
+    };
     // tslint:disable-next-line:member-ordering
-    private _data: {date, close}[] = [];
+    private _data: {station; group; start; end}[] = [];
+    private _types: string[] = [];
 
     constructor(
         private el: ElementRef,
@@ -33,10 +38,19 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
 
-        if (changes.sizes) {
-            this._data = this.sizes.data; // changes.data.currentValue.map(item => ({date: item.date, close: item.value}));
+        if (changes.graphData) {
+            this._data = this.graphData.data;
+            this._types = [];
+            const groups: any = {};
+            this._data.forEach(item => groups[item.group] = item.group);
+            // tslint:disable-next-line:forin
+            for (const group in groups) {
+                this._types.push(group);
+            }
+
             this.updateScales();
             this.updateChart();
+
         }
 
     }
@@ -52,28 +66,14 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     }
 
-    // tslint:disable-next-line:member-ordering
-    private xAxis: any;
-    // tslint:disable-next-line:member-ordering
-    private yAxis: any;
-
     private get areaWidth(): number {
-        return this.sizes.width;
+        return this.graphData.width;
     }
     private get areaHeight(): number {
-        return this.sizes.height;
+        return this.graphData.height;
     }
 
     private updateScales() {
-
-        const yMax = d3.max(this._data, (d: any) => d.close);
-        const yMin = d3.min(this._data, (d: any) => d.close);
-
-        this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
-        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
-
-        this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
-        this.yAxis.domain([0, yMax + yMax * 0.05]);
 
     }
 
@@ -89,12 +89,12 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     public initChart() {
 
-        const types = ['group1', 'group2'];
+        // const types = ['group1', 'group2'];
 
-        const colorScale = d3
-            .scaleOrdinal()
-            .domain(types)
-            .range(['#202576', '#202576']);
+        // const colorScale = d3
+        //     .scaleOrdinal()
+        //     .domain(types)
+        //     .range(['#202576', '#202576']);
 
         const timeline = new Timeline();
         timeline.size([this.areaWidth, 480])
@@ -102,13 +102,10 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             .padding(3)
             .maxBandHeight(22);
 
-        const csv = this.csv;
-        const x = this.xAxis,
-            y = this.yAxis;
         const height = this.areaHeight;
-        types.forEach((type, i) => {
+        this._types.forEach((type, i) => {
 
-            const onlyThisType = csv.filter((d) => d.group === type);
+            const onlyThisType = this.graphData.data.filter((d) => d.group === type);
             const theseBands = timeline.timeline(onlyThisType);
 
             this.graph_timeline.selectAll('g.timeline_' + i)
@@ -139,31 +136,4 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     }
 
-    // tslint:disable-next-line:member-ordering
-    public csv = [
-        {
-            station: 'STATION NAME 1',
-            group: 'group1',
-            start: DateTime('22/03/2018 09:30'),
-            end: DateTime('22/03/2018 13:00'),
-        },
-        {
-            station: 'STATION NAME 1',
-            group: 'group1',
-            start: DateTime('22/03/2018 14:00'),
-            end: DateTime('22/03/2018 19:00'),
-        },
-        {
-            station: 'STATION NAME 2',
-            group: 'group2',
-            start: DateTime('22/03/2018 11:00'),
-            end: DateTime('22/03/2018 15:00'),
-        },
-        {
-            station: 'STATION NAME 2',
-            group: 'group2',
-            start: DateTime('22/03/2018 16:00'),
-            end: DateTime('22/03/2018 21:00'),
-        },
-    ];
 }

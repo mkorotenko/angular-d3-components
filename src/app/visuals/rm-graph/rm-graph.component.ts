@@ -13,7 +13,7 @@ import * as d3 from 'd3';
     <svg #svg [attr.width]="width" [attr.height]="height">
         <svg:g [attr.transform]="'translate(' + margin.left + ',' + margin.top + ')'">
             <g [rm-area]="graphRect"></g>
-            <g [rm-timeline]="graphRect"></g>
+            <g [rm-timeline]="timelineGraphData"></g>
             <g [rm-points]="graphRect"></g>
             <g [rm-axis]="graphRect"></g>
         </g>
@@ -31,23 +31,41 @@ import * as d3 from 'd3';
     </div>`,
   styleUrls: ['./rm-graph.component.css']
 })
-export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
+export class GraphComponent implements AfterViewInit, OnChanges {
 
-    @ViewChild('svg') _svg: any;
-    @ViewChild('tooltip') _tooltip: any;
-
-    // tslint:disable-next-line:member-ordering
-    @Input() data: any[];
-    // tslint:disable-next-line:member-ordering
-    private _data: {date, close}[] = [];
 
     constructor(
         private el: ElementRef,
         private cd: ChangeDetectorRef
     ) { }
 
-    ngOnInit() {
+    // @ViewChild('svg') _svg: any;
+    @ViewChild('tooltip') _tooltip: any;
 
+    @Input() data: any[];
+
+    @Input() areaData: any[];
+
+    @Input() pointsData: any[];
+
+    @Input() timelineData: any[];
+
+    private _data: {date, close}[] = [];
+
+    public get graphRect(): {width; height, data} {
+        return {
+            width: this.areaWidth,
+            height: this.areaHeight,
+            data: this._data
+        };
+    }
+
+    public get timelineGraphData(): {width; height, data} {
+        return {
+            width: this.areaWidth,
+            height: this.areaHeight,
+            data: this.timelineData
+        };
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -91,24 +109,20 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
     // tslint:disable-next-line:member-ordering
     public height = 400;
 
-    // tslint:disable-next-line:member-ordering
-    public graph: any;
-    // tslint:disable-next-line:member-ordering
-    public svg: any;
+    // // tslint:disable-next-line:member-ordering
+    // public graph: any;
+    // // tslint:disable-next-line:member-ordering
+    // public svg: any;
     // tslint:disable-next-line:member-ordering
     public tooltip: any;
 
     // tslint:disable-next-line:member-ordering
     public margin = {top: 20, right: 0, bottom: 30, left: 50};
 
-    public get graphRect(): {width; height, data} {
-        return {width: this.areaWidth, height: this.areaHeight, data: this._data};
-    }
-
-    // tslint:disable-next-line:member-ordering
-    private xAxis: any;
-    // tslint:disable-next-line:member-ordering
-    private yAxis: any;
+    // // tslint:disable-next-line:member-ordering
+    // private xAxis: any;
+    // // tslint:disable-next-line:member-ordering
+    // private yAxis: any;
 
     private get areaWidth(): number {
         return this.width - this.margin.left - this.margin.right;
@@ -117,18 +131,18 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
         return this.height - this.margin.top - this.margin.bottom;
     }
 
-    private updateScales() {
+    // private updateScales() {
 
-        const yMax = d3.max(this._data, (d: any) => d.close);
-        const yMin = d3.min(this._data, (d: any) => d.close);
+    //     const yMax = d3.max(this._data, (d: any) => d.close);
+    //     const yMin = d3.min(this._data, (d: any) => d.close);
 
-        this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
-        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
+    //     this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
+    //     this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
 
-        this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
-        // this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
-        this.yAxis.domain([0, yMax + yMax * 0.05]);
+    //     this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
+    //     // this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
+    //     this.yAxis.domain([0, yMax + yMax * 0.05]);
 
-    }
+    // }
 
 }

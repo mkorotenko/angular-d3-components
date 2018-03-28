@@ -23,13 +23,7 @@ const DateTime = d3.timeParse('%d/%m/%Y %H:%M');
 })
 export class Chart1Component {
 
-  constructor() {
-    // d3.timeParse('%d/%m/%y %H:%M')
-    // console.info('d3', d3);
-    // console.info('this', this);
-  }
-
-  public schedule: ScheduleNode[] = [
+  public timeline: ScheduleNode[] = [
     {
       station: 'STATION NAME 1',
       group: 'group1',
@@ -67,19 +61,19 @@ export class Chart1Component {
       end: DateTime('22/03/2018 12:00'),
     },
     {
-      station: 'STATION NAME 3',
+      station: 'STATION NAME 4',
       group: 'group4',
       start: DateTime('22/03/2018 11:00'),
       end: DateTime('22/03/2018 15:00'),
     },
     {
-      station: 'STATION NAME 3',
+      station: 'STATION NAME 4',
       group: 'group4',
       start: DateTime('22/03/2018 16:00'),
       end: DateTime('22/03/2018 20:00'),
     },
     {
-      station: 'STATION NAME 3',
+      station: 'STATION NAME 5',
       group: 'group5',
       start: DateTime('22/03/2018 16:30'),
       end: DateTime('22/03/2018 21:00'),
