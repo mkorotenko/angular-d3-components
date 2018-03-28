@@ -33,23 +33,6 @@ import * as d3 from 'd3';
 })
 export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
 
-    public startTime: string;
-    public endTime: string;
-    public sales: string;
-    public hours: string;
-
-    public width = 500;
-    public height = 400;
-
-    public graph: any;
-    public svg: any;
-    public tooltip: any;
-
-    public margin = {top: 20, right: 0, bottom: 30, left: 50};
-    public get graphRect(): {width; height, data} {
-        return {width: this.areaWidth, height: this.areaHeight, data: this._data};
-    }
-
     @ViewChild('svg') _svg: any;
     @ViewChild('tooltip') _tooltip: any;
 
@@ -81,12 +64,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
         this.width = rect.width;
         this.height = rect.height;
 
-        // this.svg = d3.select(this._svg.nativeElement)
-        //     .attr('width', this.width)
-        //     .attr('height', this.height);
-
-        // this.graph = this.svg.append('g').attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
-        // this.tooltip = d3.select(this._tooltip.nativeElement);
+        this.cd.detectChanges();
 
     }
 
@@ -97,6 +75,34 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
         this.width = rect.width;
         this.height = rect.height;
 
+    }
+
+    // tslint:disable-next-line:member-ordering
+    public startTime: string;
+    // tslint:disable-next-line:member-ordering
+    public endTime: string;
+    // tslint:disable-next-line:member-ordering
+    public sales: string;
+    // tslint:disable-next-line:member-ordering
+    public hours: string;
+
+    // tslint:disable-next-line:member-ordering
+    public width = 500;
+    // tslint:disable-next-line:member-ordering
+    public height = 400;
+
+    // tslint:disable-next-line:member-ordering
+    public graph: any;
+    // tslint:disable-next-line:member-ordering
+    public svg: any;
+    // tslint:disable-next-line:member-ordering
+    public tooltip: any;
+
+    // tslint:disable-next-line:member-ordering
+    public margin = {top: 20, right: 0, bottom: 30, left: 50};
+
+    public get graphRect(): {width; height, data} {
+        return {width: this.areaWidth, height: this.areaHeight, data: this._data};
     }
 
     // tslint:disable-next-line:member-ordering

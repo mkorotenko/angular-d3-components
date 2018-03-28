@@ -52,7 +52,6 @@ export class AxisComponent implements AfterViewInit, OnChanges {
     ngAfterViewInit() {
 
         this.graph_xAxis = d3.select(this._xAxis.nativeElement);
-
         this.graph_yAxis = d3.select(this._yAxis.nativeElement);
 
         this.initChart();
