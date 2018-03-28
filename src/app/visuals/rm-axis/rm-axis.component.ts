@@ -26,7 +26,7 @@ export class AxisComponent implements AfterViewInit, OnChanges {
     ) { }
 
     // tslint:disable-next-line:no-input-rename
-    @Input('rm-axis') sizes: {width; height; data};
+    @Input('rm-axis') sizes: {width, height, data};
 
     ngOnChanges(changes: SimpleChanges) {
 
@@ -39,7 +39,7 @@ export class AxisComponent implements AfterViewInit, OnChanges {
     }
 
     // tslint:disable-next-line:member-ordering
-    private _data: {date, close}[] = [];
+    private _data: {date, value}[] = [];
     // tslint:disable-next-line:member-ordering
     public graph_xAxis: any;
     // tslint:disable-next-line:member-ordering
@@ -70,8 +70,8 @@ export class AxisComponent implements AfterViewInit, OnChanges {
         const width = this.areaWidth;
         const height = this.areaHeight;
 
-        const yMax = d3.max(this._data, (d: any) => d.close);
-        const yMin = d3.min(this._data, (d: any) => d.close);
+        const yMax = d3.max(this._data, (d: any) => d.value);
+        const yMin = d3.min(this._data, (d: any) => d.value);
 
         const xAxis = d3.scaleTime().range([0, width]);
         const yAxis = d3.scaleLinear().rangeRound([height, 0]);

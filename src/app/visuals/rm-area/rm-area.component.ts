@@ -21,7 +21,7 @@ export class AreaComponent implements AfterViewInit, OnChanges {
     // tslint:disable-next-line:no-input-rename
     @Input('rm-area') sizes: {width; height; data};
     // tslint:disable-next-line:member-ordering
-    private _data: {date, close}[] = [];
+    private _data: {date, value}[] = [];
 
     constructor(
         private el: ElementRef,
@@ -31,7 +31,7 @@ export class AreaComponent implements AfterViewInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
 
         if (changes.sizes) {
-            this._data = this.sizes.data; // changes.data.currentValue.map(item => ({date: item.date, close: item.value}));
+            this._data = this.sizes.data; // changes.data.currentValue.map(item => ({date: item.date, value: item.value}));
             this.updateScales();
             this.updateChart();
         }
@@ -63,8 +63,8 @@ export class AreaComponent implements AfterViewInit, OnChanges {
 
     private updateScales() {
 
-        const yMax = d3.max(this._data, (d: any) => d.close);
-        const yMin = d3.min(this._data, (d: any) => d.close);
+        const yMax = d3.max(this._data, (d: any) => d.value);
+        const yMin = d3.min(this._data, (d: any) => d.value);
 
         this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
         this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
@@ -88,9 +88,9 @@ export class AreaComponent implements AfterViewInit, OnChanges {
         const area = d3.area()
             .curve(d3.curveNatural)
             .x((d: any) => x(d.date))
-             //  .y((d: any) => y(d.close))
+             //  .y((d: any) => y(d.value))
             .y0(this.areaHeight)
-            .y1((d: any) => y(d.close));
+            .y1((d: any) => y(d.value));
 
         this.graph_area.selectAll('path')
             .remove();
@@ -113,9 +113,9 @@ export class AreaComponent implements AfterViewInit, OnChanges {
         const area = d3.area()
             .curve(d3.curveNatural)
             .x((d: any) => x(d.date))
-            // .y((d: any) => y(d.close));
+            // .y((d: any) => y(d.value));
             .y0(this.areaHeight)
-            .y1((d: any) => y(d.close));
+            .y1((d: any) => y(d.value));
 
         // add the area
         this.graph_area.selectAll('path.area')

@@ -12,10 +12,10 @@ import * as d3 from 'd3';
   template: `
     <svg #svg [attr.width]="width" [attr.height]="height">
         <svg:g [attr.transform]="'translate(' + margin.left + ',' + margin.top + ')'">
-            <g [rm-area]="graphRect"></g>
+            <g [rm-area]="areaGraphData"></g>
             <g [rm-timeline]="timelineGraphData"></g>
-            <g [rm-points]="graphRect"></g>
-            <g [rm-axis]="graphRect"></g>
+            <g [rm-points]="pointsGraphData"></g>
+            <g [rm-axis]="areaGraphData"></g>
         </g>
     </svg>
     <div #tooltip class="tooltip">
@@ -33,7 +33,6 @@ import * as d3 from 'd3';
 })
 export class GraphComponent implements AfterViewInit, OnChanges {
 
-
     constructor(
         private el: ElementRef,
         private cd: ChangeDetectorRef
@@ -42,25 +41,13 @@ export class GraphComponent implements AfterViewInit, OnChanges {
     // @ViewChild('svg') _svg: any;
     @ViewChild('tooltip') _tooltip: any;
 
-    @Input() data: any[];
-
     @Input() areaData: any[];
 
     @Input() pointsData: any[];
 
     @Input() timelineData: any[];
 
-    private _data: {date, close}[] = [];
-
-    public get graphRect(): {width; height, data} {
-        return {
-            width: this.areaWidth,
-            height: this.areaHeight,
-            data: this._data
-        };
-    }
-
-    public get timelineGraphData(): {width; height, data} {
+    public get timelineGraphData(): {width, height, data} {
         return {
             width: this.areaWidth,
             height: this.areaHeight,
@@ -68,11 +55,23 @@ export class GraphComponent implements AfterViewInit, OnChanges {
         };
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    public get areaGraphData(): {width, height, data} {
+        return {
+            width: this.areaWidth,
+            height: this.areaHeight,
+            data: this.areaData
+        };
+    }
 
-        if (changes.data) {
-            this._data = changes.data.currentValue.map(item => ({date: item.date, close: item.value}));
-        }
+    public get pointsGraphData(): {width, height, data} {
+        return {
+            width: this.areaWidth,
+            height: this.areaHeight,
+            data: this.pointsData
+        };
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
 
     }
 
