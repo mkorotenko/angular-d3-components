@@ -115,13 +115,17 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
                 // .attr('class', 'timeline-group')
                 .attr('class', 'timeline-group timeline_' + i);
 
+                const t = d3.transition()
+                    .duration(750)
+                    .ease(d3.easeLinear);
             bar.append('rect')
                 .attr('rx', 10)
                 .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
-                .attr('width', (d: {start, end}) => (d.end - d.start))
-                .on('click', this.onClick.bind(this));
+                .transition(t)
+                .attr('width', (d: {start, end}) => (d.end - d.start));
+                // .on('click', this.onClick.bind(this));
 
             bar.append('text')
                 .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
