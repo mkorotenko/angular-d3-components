@@ -30,6 +30,8 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
     // tslint:disable-next-line:member-ordering
     private _data: {station; group; start; end}[] = [];
     private _types: string[] = [];
+    private _timeMin: number = DateTime('22/03/2018 09:30').getTime();
+    private _timeMax: number = DateTime('22/03/2018 21:30').getTime();
 
     constructor(
         private el: ElementRef,
@@ -42,7 +44,9 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             this._data = this.graphData.data;
             this._types = [];
             const groups: any = {};
-            this._data.forEach(item => groups[item.group] = item.group);
+            this._data.forEach(item => {
+                groups[item.group] = item.group;
+            });
             // tslint:disable-next-line:forin
             for (const group in groups) {
                 this._types.push(group);
@@ -91,7 +95,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
         const timeline = new Timeline();
         timeline.size([this.areaWidth, 480])
-            .extent([DateTime('22/03/2018 09:30').getTime(), DateTime('22/03/2018 21:30').getTime()])
+            .extent([this._timeMin, this._timeMax])
             .padding(3)
             .maxBandHeight(22);
 
