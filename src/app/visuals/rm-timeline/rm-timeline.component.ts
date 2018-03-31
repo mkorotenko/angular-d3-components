@@ -89,13 +89,6 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     public initChart() {
 
-        // const types = ['group1', 'group2'];
-
-        // const colorScale = d3
-        //     .scaleOrdinal()
-        //     .domain(types)
-        //     .range(['#202576', '#202576']);
-
         const timeline = new Timeline();
         timeline.size([this.areaWidth, 480])
             .extent([DateTime('22/03/2018 09:30').getTime(), DateTime('22/03/2018 21:30').getTime()])
@@ -123,17 +116,23 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
                 .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
-                .attr('width', (d: {start, end}) => (d.end - d.start));
+                .attr('width', (d: {start, end}) => (d.end - d.start))
+                .on('click', this.onClick.bind(this));
 
             bar.append('text')
                 .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
                 .attr('y', (d: {y}) => d.y)
-                .attr('dy', '1.1em')
+                .attr('dy', '1.15em')
                 // .attr('font-size', '12px')
                 .text((d: {station}) => d.station);
 
         });
 
+    }
+
+    private onClick(timeline) {
+        // tslint:disable-next-line:no-console
+        console.info('onClick', timeline );
     }
 
 }
