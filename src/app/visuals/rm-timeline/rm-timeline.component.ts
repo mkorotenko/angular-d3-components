@@ -1,5 +1,6 @@
 // https://github.com/d3/d3-shape
 // http://bl.ocks.org/d3noob/7030f35b72de721622b8
+// https://medium.com/@c_behrens/enter-update-exit-6cafc6014c36
 import { Component, Input, ChangeDetectorRef, HostListener, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { AfterViewInit, OnChanges, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as d3 from 'd3';
@@ -115,10 +116,12 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
                 // .attr('class', 'timeline-group')
                 .attr('class', 'timeline-group timeline_' + i);
 
-                const t = d3.transition()
-                    .duration(750)
-                    .ease(d3.easeLinear);
+            const t = d3.transition()
+                .duration(750)
+                .ease(d3.easeLinear);
+
             bar.append('rect')
+                .on('click', this.onClick.bind(this))
                 .attr('rx', 10)
                 .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
