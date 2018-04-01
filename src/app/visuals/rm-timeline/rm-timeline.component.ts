@@ -109,32 +109,30 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             this.graph_timeline.selectAll('g.timeline_' + i)
                 .remove();
 
-            const bar = this.graph_timeline.selectAll('g.timeline_' + i)
-                .data(theseBands)
-                .enter().append('g')
-                .attr('transform', 'translate(0,' + (height - (25 + (i * 25))) + ')')
-                // .attr('class', 'timeline-group')
-                .attr('class', 'timeline-group timeline_' + i);
-
             const t = d3.transition()
                 .duration(750)
                 .ease(d3.easeLinear);
 
+            const bar = this.graph_timeline.selectAll('g.timeline_' + i)
+                .data(theseBands)
+                .enter().append('g')
+                .attr('transform', 'translate(0,' + (height - (25 + (i * 25))) + ')')
+                .attr('class', 'timeline-group timeline_' + i);
+
             bar.append('rect')
                 .on('click', this.onClick.bind(this))
+                .attr('class', (d: {group}) => d.group)
                 .attr('rx', 10)
                 .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
                 .transition(t)
                 .attr('width', (d: {start, end}) => (d.end - d.start));
-                // .on('click', this.onClick.bind(this));
 
             bar.append('text')
                 .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
                 .attr('y', (d: {y}) => d.y)
                 .attr('dy', '1.15em')
-                // .attr('font-size', '12px')
                 .text((d: {station}) => d.station);
 
         });
