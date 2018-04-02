@@ -100,42 +100,63 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             .padding(3)
             .maxBandHeight(22);
 
+        const newBarTransition = d3.transition()
+            .duration(750)
+            .ease(d3.easeLinear);
+
         const height = this.areaHeight;
-        this._types.forEach((type, i) => {
 
-            const onlyThisType = this.graphData.data.filter((d) => d.group === type);
-            const theseBands = timeline.timeline(onlyThisType);
+        const timeline_group = this.graph_timeline.selectAll('g.timeline-group')
+            .data(this._types);
+        timeline_group.enter().append('g')
+            .attr('transform', (group: string, index: number) => 'translate(0,' + (height - (25 + (index * 25))) + ')')
+            .attr('class', (group: string, index: number) => 'timeline-group timeline_' + index);
+        timeline_group.exit().remove();
 
-            this.graph_timeline.selectAll('g.timeline_' + i)
-                .remove();
+         this._types.forEach((group: string, index: number) => {
 
-            const bar = this.graph_timeline.selectAll('g.timeline_' + i)
-                .data(theseBands)
-                .enter().append('g')
-                .attr('transform', 'translate(0,' + (height - (25 + (i * 25))) + ')')
-                // .attr('class', 'timeline-group')
-                .attr('class', 'timeline-group timeline_' + i);
+            const groupData = this.graphData.data.filter((d) => d.group === group);
+            const timelineData = timeline.timeline(groupData);
 
-            const t = d3.transition()
-                .duration(750)
-                .ease(d3.easeLinear);
+            const groupBar = this.graph_timeline.select('.timeline-group.timeline_' + index);
+            const timeBar = groupBar.selectAll('rect')
+                .data(timelineData);
 
-            bar.append('rect')
-                .on('click', this.onClick.bind(this))
+            const timeText = groupBar.selectAll('text')
+                .data(timelineData);
+
+            timeBar.enter().append('rect')
                 .attr('rx', 10)
                 .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
-                .transition(t)
+                // .transition(newBarTransition)
                 .attr('width', (d: {start, end}) => (d.end - d.start));
-                // .on('click', this.onClick.bind(this));
 
-            bar.append('text')
+            timeText.enter().append('text')
                 .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
                 .attr('y', (d: {y}) => d.y)
                 .attr('dy', '1.15em')
-                // .attr('font-size', '12px')
                 .text((d: {station}) => d.station);
+
+            timeBar
+                .attr('x', (d: {start}) => d.start)
+                .attr('y', (d: {y}) => d.y)
+                .attr('height', (d: {dy}) => d.dy)
+                .attr('width', (d: {start, end}) => (d.end - d.start));
+
+            timeText
+                .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
+                .attr('y', (d: {y}) => d.y)
+                .text((d: {station}) => d.station)
+
+            timeBar.exit()
+                // .transition(newBarTransition)
+                .attr('width', 0)
+                .remove()
+
+            timeText.exit()
+                .remove()
 
         });
 
