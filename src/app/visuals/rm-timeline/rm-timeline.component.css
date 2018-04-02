@@ -1,9 +1,13 @@
 g.timeline-group rect {
-  fill: #202576;
-  stroke: black;
+  fill: #1f2576;
   stroke-width: 1;
 }
+g.timeline-group rect:hover {
+  fill: #3b44bd;
+  cursor: pointer;
+}
 g.timeline-group text {
-fill: #fff;
-text-anchor: middle;
+  fill: #fff;
+  text-anchor: middle;
+  font-size: 11px;
 }

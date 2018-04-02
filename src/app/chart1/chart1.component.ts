@@ -23,13 +23,7 @@ const DateTime = d3.timeParse('%d/%m/%Y %H:%M');
 })
 export class Chart1Component {
 
-  constructor() {
-    // d3.timeParse('%d/%m/%y %H:%M')
-    // console.info('d3', d3);
-    // console.info('this', this);
-  }
-
-  public schedule: ScheduleNode[] = [
+  public timeline: ScheduleNode[] = [
     {
       station: 'STATION NAME 1',
       group: 'group1',
@@ -67,19 +61,19 @@ export class Chart1Component {
       end: DateTime('22/03/2018 12:00'),
     },
     {
-      station: 'STATION NAME 3',
+      station: 'STATION NAME 4',
       group: 'group4',
       start: DateTime('22/03/2018 11:00'),
       end: DateTime('22/03/2018 15:00'),
     },
     {
-      station: 'STATION NAME 3',
+      station: 'STATION NAME 4',
       group: 'group4',
       start: DateTime('22/03/2018 16:00'),
       end: DateTime('22/03/2018 20:00'),
     },
     {
-      station: 'STATION NAME 3',
+      station: 'STATION NAME 5',
       group: 'group5',
       start: DateTime('22/03/2018 16:30'),
       end: DateTime('22/03/2018 21:00'),
@@ -87,6 +81,10 @@ export class Chart1Component {
   ];
 
   public area: ChartNode[] = [
+    {
+      date: DateTime('22/03/2018 09:30'),
+      value: 120,
+    },
     {
       date: DateTime('22/03/2018 10:00'),
       value: 400,
@@ -135,14 +133,10 @@ export class Chart1Component {
       date: DateTime('22/03/2018 21:00'),
       value: 650,
     },
-  ];
-
-  public data: any[] = [
-    {date: '24-Apr-07', value: 93.24},
-    {date: '25-Apr-07', value: 95.35},
-    {date: '26-Apr-07', value: 98.84},
-    {date: '27-Apr-07', value: 99.92},
-    {date: '28-Apr-07', value: 99.80},
+    {
+      date: DateTime('22/03/2018 21:30'),
+      value: 410,
+    },
   ];
 
 }
