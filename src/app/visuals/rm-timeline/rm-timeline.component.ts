@@ -1,5 +1,6 @@
 // https://github.com/d3/d3-shape
 // http://bl.ocks.org/d3noob/7030f35b72de721622b8
+// https://medium.com/@c_behrens/enter-update-exit-6cafc6014c36
 import { Component, Input, ChangeDetectorRef, HostListener, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { AfterViewInit, OnChanges, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as d3 from 'd3';
@@ -22,9 +23,16 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
     @ViewChild('timeline') _timeline: any;
 
     // tslint:disable-next-line:no-input-rename
-    @Input('rm-timeline') sizes: {width; height; data};
+    @Input('rm-timeline') graphData: {
+        width: number,
+        height: number,
+        data: {station; group; start; end}[]
+    };
     // tslint:disable-next-line:member-ordering
-    private _data: {date, close}[] = [];
+    private _data: {station; group; start; end}[] = [];
+    private _types: string[] = [];
+    private _timeMin: number = DateTime('22/03/2018 09:30').getTime();
+    private _timeMax: number = DateTime('22/03/2018 21:30').getTime();
 
     constructor(
         private el: ElementRef,
@@ -33,10 +41,21 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
 
-        if (changes.sizes) {
-            this._data = this.sizes.data; // changes.data.currentValue.map(item => ({date: item.date, close: item.value}));
+        if (changes.graphData) {
+            this._data = this.graphData.data;
+            this._types = [];
+            const groups: any = {};
+            this._data.forEach(item => {
+                groups[item.group] = item.group;
+            });
+            // tslint:disable-next-line:forin
+            for (const group in groups) {
+                this._types.push(group);
+            }
+
             this.updateScales();
             this.updateChart();
+
         }
 
     }
@@ -52,28 +71,14 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     }
 
-    // tslint:disable-next-line:member-ordering
-    private xAxis: any;
-    // tslint:disable-next-line:member-ordering
-    private yAxis: any;
-
     private get areaWidth(): number {
-        return this.sizes.width;
+        return this.graphData.width;
     }
     private get areaHeight(): number {
-        return this.sizes.height;
+        return this.graphData.height;
     }
 
     private updateScales() {
-
-        const yMax = d3.max(this._data, (d: any) => d.close);
-        const yMin = d3.min(this._data, (d: any) => d.close);
-
-        this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
-        this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
-
-        this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
-        this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
 
     }
 
@@ -89,26 +94,16 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     public initChart() {
 
-        const types = ['group1', 'group2'];
-
-        const colorScale = d3
-            .scaleOrdinal()
-            .domain(types)
-            .range(['#202576', '#202576']);
-
         const timeline = new Timeline();
         timeline.size([this.areaWidth, 480])
-            .extent([DateTime('22/03/2018 10:00').getTime(), DateTime('22/03/2018 21:00').getTime()])
+            .extent([this._timeMin, this._timeMax])
             .padding(3)
-            .maxBandHeight(20);
+            .maxBandHeight(22);
 
-        const csv = this.csv;
-        const x = this.xAxis,
-            y = this.yAxis;
         const height = this.areaHeight;
-        types.forEach((type, i) => {
+        this._types.forEach((type, i) => {
 
-            const onlyThisType = csv.filter((d) => d.group === type);
+            const onlyThisType = this.graphData.data.filter((d) => d.group === type);
             const theseBands = timeline.timeline(onlyThisType);
 
             this.graph_timeline.selectAll('g.timeline_' + i)
@@ -117,53 +112,38 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             const bar = this.graph_timeline.selectAll('g.timeline_' + i)
                 .data(theseBands)
                 .enter().append('g')
-                .attr('transform', 'translate(0,' + (height - (25 + (i * 35))) + ')')
+                .attr('transform', 'translate(0,' + (height - (25 + (i * 25))) + ')')
                 // .attr('class', 'timeline-group')
-                .attr('class', 'timeline-group timeline_'+ i);
+                .attr('class', 'timeline-group timeline_' + i);
+
+            const t = d3.transition()
+                .duration(750)
+                .ease(d3.easeLinear);
 
             bar.append('rect')
+                .on('click', this.onClick.bind(this))
                 .attr('rx', 10)
                 .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
+                .transition(t)
                 .attr('width', (d: {start, end}) => (d.end - d.start));
+                // .on('click', this.onClick.bind(this));
 
             bar.append('text')
                 .attr('x', (d: {start, end}) => (d.start + (d.end - d.start) / 2))
                 .attr('y', (d: {y}) => d.y)
-                .attr('dy', '1em')
-                .attr('font-size', '12px')
+                .attr('dy', '1.15em')
+                // .attr('font-size', '12px')
                 .text((d: {station}) => d.station);
 
         });
 
     }
 
-    // tslint:disable-next-line:member-ordering
-    public csv = [
-        {
-            station: 'STATION NAME 1',
-            group: 'group1',
-            start: DateTime('22/03/2018 09:30'),
-            end: DateTime('22/03/2018 13:00'),
-        },
-        {
-            station: 'STATION NAME 1',
-            group: 'group1',
-            start: DateTime('22/03/2018 14:00'),
-            end: DateTime('22/03/2018 19:00'),
-        },
-        {
-            station: 'STATION NAME 2',
-            group: 'group2',
-            start: DateTime('22/03/2018 11:00'),
-            end: DateTime('22/03/2018 15:00'),
-        },
-        {
-            station: 'STATION NAME 2',
-            group: 'group2',
-            start: DateTime('22/03/2018 16:00'),
-            end: DateTime('22/03/2018 21:00'),
-        },
-    ];
+    private onClick(timeline) {
+        // tslint:disable-next-line:no-console
+        console.info('onClick', timeline );
+    }
+
 }

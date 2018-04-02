@@ -19,9 +19,9 @@ export class PointsComponent implements AfterViewInit, OnChanges {
     @ViewChild('points') _points: any;
 
     // tslint:disable-next-line:no-input-rename
-    @Input('rm-points') sizes: {width; height; data};
+    @Input('rm-points') sizes: {width, height, data};
     // tslint:disable-next-line:member-ordering
-    private _data: {date, close}[] = [];
+    private _data: {date, value}[] = [];
 
     constructor(
         private el: ElementRef,
@@ -31,7 +31,7 @@ export class PointsComponent implements AfterViewInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
 
         if (changes.sizes) {
-            this._data = this.sizes.data; // changes.data.currentValue.map(item => ({date: item.date, close: item.value}));
+            this._data = this.sizes.data;
             this.updateScales();
             this.updateChart();
         }
@@ -63,14 +63,14 @@ export class PointsComponent implements AfterViewInit, OnChanges {
 
     private updateScales() {
 
-        const yMax = d3.max(this._data, (d: any) => d.close);
-        const yMin = d3.min(this._data, (d: any) => d.close);
+        const yMax = d3.max(this._data, (d: any) => d.value);
+        const yMin = d3.min(this._data, (d: any) => d.value);
 
         this.xAxis = d3.scaleTime().range([0, this.areaWidth]);
         this.yAxis = d3.scaleLinear().rangeRound([this.areaHeight, 0]);
 
         this.xAxis.domain(d3.extent(this._data, (d: any) => d.date));
-        this.yAxis.domain([yMin - yMax * 0.05, yMax + yMax * 0.05]);
+        this.yAxis.domain([0, yMax + yMax * 0.05]);
 
     }
 
@@ -94,7 +94,7 @@ export class PointsComponent implements AfterViewInit, OnChanges {
             .attr('class', 'dot')
             .attr('r', 4)
             .attr('cx', (d) => x(d.date))
-            .attr('cy', (d) => y(d.close))
+            .attr('cy', (d) => y(d.value))
             .on('click', this.onClick.bind(this))
             .on('mouseover', this.onMouseOver.bind(this))
             .on('mouseout', this.onMouseOut.bind(this));
@@ -109,15 +109,15 @@ export class PointsComponent implements AfterViewInit, OnChanges {
 
         // add the points
         this.graph_points.selectAll('circle.dot')
-             .data(data)
-             .enter().append('circle')
-             .attr('class', 'dot')
-             .attr('r', 4)
-             .attr('cx', (d) => x(d.date))
-             .attr('cy', (d) => y(d.close))
-             .on('click', this.onClick.bind(this))
-             .on('mouseover', this.onMouseOver.bind(this))
-             .on('mouseout', this.onMouseOut.bind(this));
+            .data(data)
+            .enter().append('circle')
+            .attr('class', 'dot')
+            .attr('r', 4)
+            .attr('cx', (d) => x(d.date))
+            .attr('cy', (d) => y(d.value))
+            .on('click', this.onClick.bind(this))
+            .on('mouseover', this.onMouseOver.bind(this))
+            .on('mouseout', this.onMouseOut.bind(this));
 
     }
 
