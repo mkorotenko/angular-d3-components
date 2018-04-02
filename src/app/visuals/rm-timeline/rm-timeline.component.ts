@@ -65,8 +65,6 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
 
-        this.graph_timeline = d3.select(this._timeline.nativeElement);
-
         this.initChart();
 
     }
@@ -85,14 +83,9 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
     public updateChart() {
 
         if (!this.graph_timeline) {
+            // console.error('Timeline chart is not initialized.');
             return;
         }
-
-        this.initChart();
-
-    }
-
-    public initChart() {
 
         const timeline = new Timeline();
         timeline.size([this.areaWidth, 480])
@@ -119,6 +112,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
             const timelineData = timeline.timeline(groupData);
 
             const groupBar = this.graph_timeline.select('.timeline-group.timeline_' + index);
+
             const timeBar = groupBar.selectAll('rect')
                 .data(timelineData);
 
@@ -126,11 +120,12 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
                 .data(timelineData);
 
             timeBar.enter().append('rect')
+            .on('click', this.onClick.bind(this))
                 .attr('rx', 10)
                 .attr('x', (d: {start}) => d.start)
                 .attr('y', (d: {y}) => d.y)
                 .attr('height', (d: {dy}) => d.dy)
-                // .transition(newBarTransition)
+                .transition(newBarTransition)
                 .attr('width', (d: {start, end}) => (d.end - d.start));
 
             timeText.enter().append('text')
@@ -151,7 +146,7 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
                 .text((d: {station}) => d.station)
 
             timeBar.exit()
-                // .transition(newBarTransition)
+                .transition(newBarTransition)
                 .attr('width', 0)
                 .remove()
 
@@ -159,6 +154,12 @@ export class TimelineComponent implements AfterViewInit, OnChanges {
                 .remove()
 
         });
+    }
+
+    public initChart() {
+
+        console.info('initChart');
+        this.graph_timeline = d3.select(this._timeline.nativeElement);
 
     }
 
