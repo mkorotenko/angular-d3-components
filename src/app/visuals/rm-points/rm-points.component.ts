@@ -43,8 +43,6 @@ export class PointsComponent implements AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
 
-        this.graph_points = d3.select(this._points.nativeElement);
-
         this.initChart();
 
     }
@@ -102,22 +100,7 @@ export class PointsComponent implements AfterViewInit, OnChanges {
 
     public initChart() {
 
-        const data = this._data;
-
-        const x = this.xAxis,
-            y = this.yAxis;
-
-        // add the points
-        this.graph_points.selectAll('circle.dot')
-            .data(data)
-            .enter().append('circle')
-            .attr('class', 'dot')
-            .attr('r', 4)
-            .attr('cx', (d) => x(d.date))
-            .attr('cy', (d) => y(d.value))
-            .on('click', this.onClick.bind(this))
-            .on('mouseover', this.onMouseOver.bind(this))
-            .on('mouseout', this.onMouseOut.bind(this));
+        this.graph_points = d3.select(this._points.nativeElement);
 
     }
 
